@@ -36,7 +36,7 @@ do
     SUCCESS_PC="$(riscv${ARCH}-none-elf-objdump -S ${COMPILED_DIR}/${i}_rv${ARCH}.elf | grep "<pass>:" | awk '{print $1}')"
     #echo ${SUCCESS_PC} ${i}_rv${ARCH}.bin
     set +e
-    riscv_em -f ${COMPILED_DIR}/${i}_rv${ARCH}.bin -s ${SUCCESS_PC} -n ${MAX_NUM_CYCLES} > ${TRACES_DIR}/${i}.txt -d /working_dir/Desktop/work/private/fpga/riscv_em/dts/riscv_em.dtb
+    riscv_em -f ${COMPILED_DIR}/${i}_rv${ARCH}.bin -s ${SUCCESS_PC} -n ${MAX_NUM_CYCLES} > ${TRACES_DIR}/${i}.txt
     set -e
 
     scripts/convert_riscv_em_output.sh ${TRACES_DIR}/${i}.txt > ${REG_STATES_DIR}/${i}.txt
