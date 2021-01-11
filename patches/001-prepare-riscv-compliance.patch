@@ -1,0 +1,43 @@
+From b601b5ec38e06538cf35509500c03e9cd461463f Mon Sep 17 00:00:00 2001
+From: Franz Flasch <franz.flasch@gmx.at>
+Date: Mon, 11 Jan 2021 11:04:11 +0000
+Subject: [PATCH] Preparation for riscv_em
+
+---
+ riscv-target/spike/model_test.h  | 4 +++-
+ riscv-test-suite/env/arch_test.h | 4 ++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/riscv-target/spike/model_test.h b/riscv-target/spike/model_test.h
+index 6aeb1c2..acfe915 100644
+--- a/riscv-target/spike/model_test.h
++++ b/riscv-target/spike/model_test.h
+@@ -25,7 +25,9 @@
+     sw x1, tohost, t5;                                                        \
+   self_loop:  j self_loop;
+ 
+-#define RVMODEL_BOOT
++#define RVMODEL_BOOT \
++.globl _start;       \
++_start:
+ 
+ //RV_COMPLIANCE_DATA_BEGIN
+ #define RVMODEL_DATA_BEGIN                                              \
+diff --git a/riscv-test-suite/env/arch_test.h b/riscv-test-suite/env/arch_test.h
+index 387bde5..80a3799 100644
+--- a/riscv-test-suite/env/arch_test.h
++++ b/riscv-test-suite/env/arch_test.h
+@@ -145,6 +145,10 @@
+ // --------------------------------- CODE BEGIN w/ TRAP HANDLER END -----------------------------//
+ 
+ .macro RVTEST_CODE_END
++  .global pass
++  pass:
++    nop
++
+   .align 4; 
+   .global rvtest_code_end
+   rvtest_code_end:
+-- 
+2.25.1
+
