@@ -31,6 +31,9 @@ tests=("${tests_ui[@]}" "${tests_ua[@]}" "${tests_um[@]}" "${tests_my_tests[@]}"
 
 MAX_NUM_CYCLES=150000
 
+EXIT_CODE=0
+tmp_local_exit_code=0
+
 for i in "${tests[@]}"
 do
     SUCCESS_PC="$(riscv${ARCH}-none-elf-objdump -S ${COMPILED_DIR}/${i}_rv${ARCH}.elf | grep "<pass>:" | awk '{print $1}')"
@@ -40,5 +43,14 @@ do
     set -e
 
     scripts/convert_riscv_em_output.sh ${TRACES_DIR}/${i}.txt > ${REG_STATES_DIR}/${i}.txt
-    cmp --silent ${REG_STATES_DIR}/${i}.txt ${QEMU_REG_STATES_DIR}/${i}_states.txt && echo "### SUCCESS: ${i}_states.txt Are Identical! ###" || echo "### ERROR: ${i}_states.txt Are Different! ###"
+    cmp --silent ${REG_STATES_DIR}/${i}.txt ${QEMU_REG_STATES_DIR}/${i}_states.txt && tmp_local_exit_code=0 || tmp_local_exit_code=1
+
+    if [ ${tmp_local_exit_code} -eq 0 ]; then
+        echo "### SUCCESS: ${i}_states.txt Are Identical! ###"
+    else
+        echo "### ERROR: ${i}_states.txt Are Different! ###"
+        EXIT_CODE=1
+    fi
 done
+
+exit ${EXIT_CODE}
