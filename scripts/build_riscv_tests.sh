@@ -21,36 +21,43 @@ mkdir -p generated_files/rv${ARCH}/compiled_files
 
 for i in "${tests_ui[@]}"
 do
+    echo "Building ${i}"
     scripts/build_test.sh $i linker_script.ld rv${ARCH} generated_files/rv${ARCH}/compiled_files ${ARCH} ui
 done
 
 for i in "${tests_ua[@]}"
 do
+    echo "Building ${i}"
     scripts/build_test.sh $i linker_script.ld rv${ARCH} generated_files/rv${ARCH}/compiled_files ${ARCH} ua
 done
 
 for i in "${tests_um[@]}"
 do
+    echo "Building ${i}"
     scripts/build_test.sh $i linker_script.ld rv${ARCH} generated_files/rv${ARCH}/compiled_files ${ARCH} um
 done
 
 for i in "${tests_mi[@]}"
 do
+    echo "Building ${i}"
     scripts/build_p_test.sh $i linker_script.ld rv${ARCH} generated_files/rv${ARCH}/compiled_files ${ARCH} mi
 done
 
 for i in "${tests_my_tests[@]}"
 do
+    echo "Building ${i}"
     scripts/build_my_test.sh $i linker_script.ld rv${ARCH} generated_files/rv${ARCH}/compiled_files ${ARCH}
 done
 
 for i in "${tests_my_c_tests[@]}"
 do
+    echo "Building ${i}"
     scripts/build_my_test.sh $i mytests/c_env.ld rv${ARCH} generated_files/rv${ARCH}/compiled_files ${ARCH} "C"
 done
 
 for i in "${tests_compliance[@]}"
 do
+    echo "Building ${i}"
     scripts/build_compliance_test.sh $i linker_script.ld rv${ARCH} generated_files/rv${ARCH}/compiled_files ${ARCH} ui
 done
 
