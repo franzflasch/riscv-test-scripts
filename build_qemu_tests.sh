@@ -24,9 +24,9 @@ mkdir -p ${REG_STATES_DIR}
 
 scripts/build_riscv_tests.sh ${ARCH}
 
-tests=("${tests_ui[@]}" "${tests_ua[@]}" "${tests_um[@]}" "${tests_mi[@]}" "${tests_my_tests[@]}" "${tests_my_c_tests[@]}" "${tests_compliance[@]}")
+tests=("${tests_ui[@]}" "${tests_ua[@]}" "${tests_um[@]}" "${tests_my_tests[@]}" "${tests_my_c_tests[@]}" "${tests_compliance[@]}" "${tests_pmp[@]}" "${tests_priv[@]}")
 #tests=("${tests_my_tests[@]}" "${tests_my_c_tests[@]}")
-#tests=("${tests_compliance[@]}")
+#tests=("${tests_mmu[@]}")
 
 for i in "${tests[@]}"
 do
@@ -35,7 +35,7 @@ do
     END_PC=$(echo $((16#$SUCCESS_PC)))
     echo $END_PC
 
-    qemu-system-riscv${ARCH} -nographic -machine virt -m 128M -kernel ${COMPILED_DIR}/${i}_rv${ARCH}.elf -d nochain,cpu -singlestep -s -S 2> ${TRACES_DIR}/${i}_trace.txt &
+    qemu-system-riscv${ARCH} -nographic -machine virt -m 128M -bios none -kernel ${COMPILED_DIR}/${i}_rv${ARCH}.elf -d nochain,cpu -singlestep -s -S 2> ${TRACES_DIR}/${i}_trace.txt &
 
     # sleep here to give qemu time to start up
     sleep 1

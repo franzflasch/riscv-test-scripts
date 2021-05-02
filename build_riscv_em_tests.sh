@@ -2,12 +2,13 @@
 
 set -e
 
-if [ "$#" -ne 1 ]; then
-	echo "Usage: $0 <ARCH>" >&2
+if [ "$#" -ne 2 ]; then
+	echo "Usage: $0 <ARCH> <DTB-location>" >&2
 	exit 1
 fi
 
 ARCH="$1"
+DTB_LOC="$2"
 
 source "${BASH_SOURCE%/*}/tests.sh"
 
@@ -22,12 +23,13 @@ REG_STATES_DIR="generated_files/riscv_em${ARCH}/register_states"
 mkdir -p ${TRACES_DIR}
 mkdir -p ${REG_STATES_DIR}
 
-tests=("${tests_ui[@]}" "${tests_ua[@]}" "${tests_um[@]}" "${tests_my_tests[@]}" "${tests_my_c_tests[@]}" "${tests_compliance[@]}")
+tests=("${tests_ui[@]}" "${tests_ua[@]}" "${tests_um[@]}" "${tests_my_tests[@]}" "${tests_my_c_tests[@]}" "${tests_compliance[@]}" "${tests_pmp[@]}" "${tests_priv[@]}")
 #tests=("${tests_my_tests[@]}" "${tests_my_c_tests[@]}")
 #tests=("${tests_ua[@]}")
 #tests=("${tests_my_tests[@]}")
 #tests=("slliw")
 #tests=("${tests_compliance[@]}")
+#tests=("${tests_pmp[@]}")
 
 MAX_NUM_CYCLES=150000
 
@@ -39,7 +41,7 @@ do
     SUCCESS_PC="$(riscv${ARCH}-none-elf-objdump -S ${COMPILED_DIR}/${i}_rv${ARCH}.elf | grep "<pass>:" | awk '{print $1}')"
     #echo ${SUCCESS_PC} ${i}_rv${ARCH}.bin
     set +e
-    riscv_em -f ${COMPILED_DIR}/${i}_rv${ARCH}.bin -s ${SUCCESS_PC} -n ${MAX_NUM_CYCLES} > ${TRACES_DIR}/${i}.txt
+    riscv_em -d ${DTB_LOC} -f ${COMPILED_DIR}/${i}_rv${ARCH}.bin -s ${SUCCESS_PC} -n ${MAX_NUM_CYCLES} > ${TRACES_DIR}/${i}.txt
     set -e
 
     scripts/convert_riscv_em_output.sh ${TRACES_DIR}/${i}.txt > ${REG_STATES_DIR}/${i}.txt

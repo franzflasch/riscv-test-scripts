@@ -1,25 +1,24 @@
 #!/bin/bash
 
-if [ "$#" -ne 6 ]; then
-	echo "Usage: $0 <test_name> <linker_script> <output_filename> <output_dir> <ARCH> <EXTENSION>" >&2
-	echo "Example (leiwandrv32): ./build_test.sh addi link_leiwandrv32.ld leiwandrv32 test_output"
-	echo "Example (qemu): ./build_test.sh addi link_qemu.ld qemu test_output"
-	exit 1
-fi
+compile_func()
+{
+    local arch="$1"
+    local test_name="$2"
+    local output_dir="$3"
+    local extension="$4"
 
-TEST_NAME="$1"
-LINKER_SCRIPT="$2"
-OUTPUT_FILE="$3"
-OUTPUT_DIR="$4"
-ARCH="$5"
-EXTENSION="$6"
+    mkdir -p ${output_dir}
+    local tests_dir="riscv-tests/isa/rv${arch}${extension}"
+    local env_dir="riscv-tests/env"
+    local output_file="rv${arch}"
 
-TESTS_DIR="riscv-tests/isa/rv${ARCH}${EXTENSION}"
-ENV_DIR="riscv-tests/env"
+    riscv${arch}-none-elf-gcc -march=rv${arch}ima -g \
+        -I. -I${tests_dir}/../macros/scalar/ -I${env_dir}/ \
+        -Wl,-T,linker_script.ld,-Bstatic -ffreestanding -nostdlib \
+        ${tests_dir}/${test_name}.S \
+        -o ${output_dir}/${test_name}_${output_file}.elf \
 
-mkdir -p $OUTPUT_DIR
-
-riscv${ARCH}-none-elf-gcc -march=rv${ARCH}ima -g \
-	-I. -I${TESTS_DIR}/../macros/scalar/ -I${ENV_DIR}/ -Wl,-T,$LINKER_SCRIPT,-Bstatic -ffreestanding -nostdlib \
-	-o ${OUTPUT_DIR}/${TEST_NAME}_${OUTPUT_FILE}.elf ${TESTS_DIR}/${TEST_NAME}.S
-riscv${ARCH}-none-elf-objcopy -O binary ${OUTPUT_DIR}/${TEST_NAME}_${OUTPUT_FILE}.elf ${OUTPUT_DIR}/${TEST_NAME}_${OUTPUT_FILE}.bin
+    riscv${arch}-none-elf-objcopy -O binary \
+        ${output_dir}/${test_name}_${output_file}.elf \
+        ${output_dir}/${test_name}_${output_file}.bin
+}
