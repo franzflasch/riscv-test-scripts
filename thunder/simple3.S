@@ -14,7 +14,7 @@ _start:
         sw      a5,-20(s0)
         lw      a4,-20(s0)
         li      a5,42
-        beq     a4,a5,.L7
+        beq     a4,a5,.L4
         j       .L4
 .L7:
         nop
