@@ -11,7 +11,7 @@ compile_mmu_user_func()
     local env_dir="riscv-tests/env"
     local output_file="rv${arch}"
 
-    riscv${arch}-none-elf-gcc -march=rv${arch}ima -mcmodel=medany -g \
+    riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -mcmodel=medany -g \
         -Wl,-T,${tests_dir}/user.ld,-Bstatic -ffreestanding -nostartfiles -specs=nano.specs \
         -o ${output_dir}/${test_name}_${output_file}.elf \
         ${tests_dir}/init.S ${tests_dir}/${test_name}.c
@@ -34,7 +34,7 @@ compile_mmu_supervisor_func()
     local env_dir="riscv-tests/env"
     local output_file="rv${arch}"
 
-    riscv${arch}-none-elf-gcc -march=rv${arch}ima -mcmodel=medany -g \
+    riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -mcmodel=medany -g \
         -Wl,-T,${tests_dir}/super.ld,-Bstatic -ffreestanding -nostartfiles -specs=nano.specs \
         -o ${output_dir}/${test_name}_${output_file}.elf \
         ${tests_dir}/init.S ${tests_dir}/${test_name}.c
@@ -57,7 +57,7 @@ compile_mmu_func()
     local env_dir="riscv-tests/env"
     local output_file="rv${arch}"
 
-    riscv${arch}-none-elf-gcc -march=rv${arch}ima -mcmodel=medany -g \
+    riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -mcmodel=medany -g \
         -Wl,-T,${tests_dir}/test.ld,-Bstatic -ffreestanding -nostartfiles -specs=nano.specs \
         -o ${output_dir}/${test_name}_${output_file}.elf \
         ${tests_dir}/init.S ${tests_dir}/${test_name}.c
