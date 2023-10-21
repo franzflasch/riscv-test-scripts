@@ -22,5 +22,6 @@ mkdir -p $OUTPUT_DIR
 
 riscv${ARCH}-none-elf-gcc -march=rv${ARCH}ia -g \
 	-I${ENV_MACHINE_DIR} -I${TESTS_DIR}/../macros/scalar/ -I${ENV_DIR}/ -Wl,-T,$LINKER_SCRIPT,-Bstatic -ffreestanding -nostdlib \
+	-Wl,--no-warn-rwx-segment \
 	-o ${OUTPUT_DIR}/${TEST_NAME}_${OUTPUT_FILE}.elf ${TESTS_DIR}/${TEST_NAME}.S
 riscv${ARCH}-none-elf-objcopy -O binary ${OUTPUT_DIR}/${TEST_NAME}_${OUTPUT_FILE}.elf ${OUTPUT_DIR}/${TEST_NAME}_${OUTPUT_FILE}.bin

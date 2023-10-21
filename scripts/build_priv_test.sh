@@ -13,6 +13,7 @@ compile_priv_user_func()
 
     riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -mcmodel=medany -g \
         -Wl,-T,${tests_dir}/user.ld,-Bstatic -ffreestanding -nostartfiles -specs=nano.specs \
+        -Wl,--no-warn-rwx-segment \
         -o ${output_dir}/${test_name}_${output_file}.elf \
         ${tests_dir}/init.S ${tests_dir}/${test_name}.c
 
@@ -36,6 +37,7 @@ compile_priv_supervisor_func()
 
     riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -mcmodel=medany -g \
         -Wl,-T,${tests_dir}/user.ld,-Bstatic -ffreestanding -nostartfiles -specs=nano.specs \
+        -Wl,--no-warn-rwx-segment \
         -o ${output_dir}/${test_name}_${output_file}.elf \
         ${tests_dir}/init.S ${tests_dir}/${test_name}.c
 
@@ -59,6 +61,7 @@ compile_priv_func()
 
     riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -mcmodel=medany -g \
         -Wl,-T,${tests_dir}/test.ld,-Bstatic -ffreestanding -nostartfiles -specs=nano.specs \
+        -Wl,--no-warn-rwx-segment \
         -o ${output_dir}/${test_name}_${output_file}.elf \
         ${tests_dir}/init.S ${tests_dir}/${test_name}.c
 

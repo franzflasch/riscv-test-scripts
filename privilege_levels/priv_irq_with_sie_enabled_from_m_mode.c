@@ -2,7 +2,8 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "priv_helper.c"
+#include "../helper/priv_helper.h"
+#include "../helper/riscv_helper.c"
 
 #define MTVEC_CLIC_VECTORED 1
 

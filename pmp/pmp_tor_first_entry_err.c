@@ -1,5 +1,6 @@
 /* ugly, but this will do for now */
-#include "pmp_helper.c"
+#include "../helper/riscv_helper.c"
+#include "../helper/pmp_helper.c"
 
 #if (__riscv_xlen == 64)
     #include "../generated_files/rv64/compiled_files/pmp_user_tor_access_err_rv64.c"
@@ -35,10 +36,10 @@ int main()
     PMP_DEBUG("Hello!\n");
 
     /* Set interrupt handler, non vectored mode */
-    __asm__ volatile ("csrw mtvec, %0" :: "r"((uintptr_t)interrupt_handler & ~MTVEC_CLIC_VECTORED));
+    __asm__ volatile ("csrw mtvec, %0" :: "r"((uintptr_t)pmp_interrupt_handler & ~MTVEC_CLIC_VECTORED));
 
 
-    pmpaddr0 = get_pmp_na_tor_addr(TEST_ACCESS_LOCATION_END);
+    pmpaddr0 = pmp_get_na_tor_addr(TEST_ACCESS_LOCATION_END);
     write_csr(pmpaddr0, pmpaddr0);
 
     /* Enable TOR mode with read write and execute */

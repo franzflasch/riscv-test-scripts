@@ -2,7 +2,11 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "priv_helper.c"
+#include "../helper/priv_helper.h"
+#include "../helper/pmp_helper.h"
+
+#include "../helper/riscv_helper.c"
+#include "../helper/pmp_helper.c"
 
 #define MTVEC_CLIC_VECTORED 1
 
@@ -164,7 +168,38 @@ void kmain(void)
     rv_uint_xlen medeleg = 0;
     rv_uint_xlen sstatus = 0;
 
+    rv_uint_xlen pmpcfg0 = 0;
+    rv_uint_xlen pmpaddr0 = 0;
+    rv_uint_xlen pmpaddr1 = 0;
+    rv_uint_xlen pmpaddr2 = 0;
+
     write_csr(mtvec, ((uintptr_t)machine_trap & ~MTVEC_CLIC_VECTORED));
+
+    /* since qemu 6.x it is needed to configure the PMP otherwise an illegal instruction gets triggered after
+       switching to user or supervisor mode 
+       https://stackoverflow.com/questions/69133848/risc-v-illegal-instruction-exception-when-switching-to-supervisor-mode
+    */
+    pmpaddr0 = pmp_get_napot_addr(0x80000000, 0x8000);
+    write_csr(pmpaddr0, pmpaddr0);
+
+    pmpaddr1 = pmp_get_napot_addr(0x80080000, 0x4000);
+    write_csr(pmpaddr1, pmpaddr1);
+
+    /* For UART access */
+    pmpaddr2 = pmp_get_napot_addr(UART_TXD_REG, 0x100);
+    write_csr(pmpaddr2, pmpaddr2);
+
+    /* Enable NAPOT mode with read write and execute */
+    pmpcfg0 = (3 << 3 | 0x7);
+    pmpcfg0 |= (3 << 3 | 0x7) << 8;
+    pmpcfg0 |= (3 << 3 | 0x7) << 16;
+    write_csr(pmpcfg0, pmpcfg0);
+
+    pmpcfg0 = read_csr(pmpcfg0);
+    PRIV_DEBUG("pmpcfg0 " PRINTF_FMT "\n", pmpcfg0);
+    PRIV_DEBUG("pmpaddr0 " PRINTF_FMT "\n", pmpaddr0);
+    PRIV_DEBUG("pmpaddr1 " PRINTF_FMT "\n", pmpaddr1);
+    PRIV_DEBUG("pmpaddr2 " PRINTF_FMT "\n", pmpaddr2);
 
     /* start with user mode and enable MIE */
     mstatus = MSTATUS_MPIE_BIT | MSTATUS_SPIE_BIT | MSTATUS_MIE_BIT | MSTATUS_SIE_BIT;

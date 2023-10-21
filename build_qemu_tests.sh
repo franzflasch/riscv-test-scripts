@@ -27,6 +27,7 @@ scripts/build_riscv_tests.sh ${ARCH}
 tests=("${tests_ui[@]}" "${tests_ua[@]}" "${tests_um[@]}" "${tests_my_tests[@]}" "${tests_my_c_tests[@]}" "${tests_compliance[@]}" "${tests_pmp[@]}" "${tests_priv[@]}")
 #tests=("${tests_my_tests[@]}" "${tests_my_c_tests[@]}")
 #tests=("${tests_mmu[@]}")
+#tests=("${tests_ui[@]}")
 
 for i in "${tests[@]}"
 do

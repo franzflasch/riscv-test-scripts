@@ -1,0 +1,13 @@
+diff --git a/arch_test_target/spike/model_test.h b/arch_test_target/spike/model_test.h
+index bfdb4422..35cc0f3f 100644
+--- a/arch_test_target/spike/model_test.h
++++ b/arch_test_target/spike/model_test.h
+@@ -26,6 +26,8 @@
+   self_loop:  j self_loop;
+ 
+ #define RVMODEL_BOOT
++.globl _start;          \
++_start:
+ 
+ //RV_COMPLIANCE_DATA_BEGIN
+ #define RVMODEL_DATA_BEGIN                                              \
