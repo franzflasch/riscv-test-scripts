@@ -14,6 +14,7 @@ compile_func()
     riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -g \
         -I. -I${tests_dir}/../macros/scalar/ -I${env_dir}/ \
         -Wl,-T,linker_script.ld,-Bstatic -ffreestanding -nostdlib \
+        -Wl,--no-warn-rwx-segment \
         ${tests_dir}/${test_name}.S \
         -o ${output_dir}/${test_name}_${output_file}.elf \
 
@@ -35,6 +36,7 @@ compile_c_func()
 
     riscv${arch}-none-elf-gcc -march=rv${arch}ima_zicsr -mcmodel=medany -g \
         -Wl,-T,mytests/c_env.ld,-Bstatic -ffreestanding -nostartfiles -specs=nano.specs \
+        -Wl,--no-warn-rwx-segment \
         -o ${output_dir}/${test_name}_${output_file}.elf \
         ${tests_dir}/init.S ${tests_dir}/${test_name}.c
 

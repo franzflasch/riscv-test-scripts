@@ -1,5 +1,6 @@
 /* ugly, but this will do for now */
-#include "pmp_helper.c"
+#include "../helper/riscv_helper.c"
+#include "../helper/pmp_helper.c"
 
 #if (__riscv_xlen == 64)
     #include "../generated_files/rv64/compiled_files/pmp_user_na4_access_ok_rv64.c"
@@ -37,21 +38,21 @@ int main()
     PMP_DEBUG("Hello!\n");
 
     /* Set interrupt handler, non vectored mode */
-    __asm__ volatile ("csrw mtvec, %0" :: "r"((uintptr_t)interrupt_handler & ~MTVEC_CLIC_VECTORED));
+    __asm__ volatile ("csrw mtvec, %0" :: "r"((uintptr_t)pmp_interrupt_handler & ~MTVEC_CLIC_VECTORED));
 
 
-    pmpaddr0 = get_pmp_napot_addr(0x80000000, 0x8000);
+    pmpaddr0 = pmp_get_napot_addr(0x80000000, 0x8000);
     write_csr(pmpaddr0, pmpaddr0);
 
-    pmpaddr1 = get_pmp_napot_addr(0x80080000, 0x4000);
+    pmpaddr1 = pmp_get_napot_addr(0x80080000, 0x4000);
     write_csr(pmpaddr1, pmpaddr1);
 
     /* For UART access */
-    pmpaddr2 = get_pmp_napot_addr(UART_TXD_REG, 0x100);
+    pmpaddr2 = pmp_get_napot_addr(UART_TXD_REG, 0x100);
     write_csr(pmpaddr2, pmpaddr2);
 
     /* For special NA4 mem access */
-    pmpaddr3 = get_pmp_na_tor_addr(TEST_ACCESS_LOCATION);
+    pmpaddr3 = pmp_get_na_tor_addr(TEST_ACCESS_LOCATION);
     write_csr(pmpaddr3, pmpaddr3);
 
     /* Enable NAPOT mode with read write and execute */

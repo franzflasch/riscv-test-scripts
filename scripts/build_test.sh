@@ -15,6 +15,7 @@ compile_func()
     riscv${arch}-none-elf-gcc -march=rv${arch}ima -g \
         -I. -I${tests_dir}/../macros/scalar/ -I${env_dir}/ \
         -Wl,-T,linker_script.ld,-Bstatic -ffreestanding -nostdlib \
+        -Wl,--no-warn-rwx-segment \
         ${tests_dir}/${test_name}.S \
         -o ${output_dir}/${test_name}_${output_file}.elf \
 

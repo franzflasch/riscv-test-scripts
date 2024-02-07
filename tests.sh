@@ -198,6 +198,7 @@ tests_pmp_user=(
     pmp_user_na4_access_err
     pmp_user_tor_access_ok
     pmp_user_tor_access_err
+    pmp_user_simple_program_mprv_check
 )
 
 tests_pmp=(
@@ -212,6 +213,7 @@ tests_pmp=(
     pmp_tor_first_entry_err
     pmp_do_nothing
     pmp_tor_read_err
+    pmp_mprv_bit
 
     # The following three tests are commented because:
     # I think this is a bug in qemu, because writing to a PMP region without W flag seems to do nothin in qemu

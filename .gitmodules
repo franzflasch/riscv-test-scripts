@@ -4,3 +4,6 @@
 [submodule "riscv-tests"]
 	path = riscv-tests
 	url = https://github.com/riscv/riscv-tests.git
+[submodule "riscv-isa-sim"]
+	path = riscv-isa-sim
+	url = git@github.com:riscv-software-src/riscv-isa-sim.git

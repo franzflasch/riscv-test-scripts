@@ -1,12 +1,13 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
+#ifndef RISCV_CSR_H
+#define RISCV_CSR_H
 
-#define PRIV_DEBUG_ENABLE
-#ifdef PRIV_DEBUG_ENABLE
-#define PRIV_DEBUG(...) do{ printf( __VA_ARGS__ ); } while( 0 )
+#include <stdint.h>
+
+// #define RISCV_HELPER_DEBUG_ENABLE
+#ifdef RISCV_HELPER_DEBUG_ENABLE
+#define RISCV_HELPER_DEBUG(...) do{ riscv_helper_printf( __VA_ARGS__ ); } while( 0 )
 #else
-#define PRIV_DEBUG(...) do{ } while ( 0 )
+#define RISCV_HELPER_DEBUG(...) do{ } while ( 0 )
 #endif
 
 #if (__riscv_xlen == 64)
@@ -26,6 +27,8 @@
 #define write_csr(reg, val) ({ \
   asm volatile ("csrw " #reg ", %0" :: "rK"(val)); })
 
+#define MTVEC_CLIC_VECTORED 1
+
 #define TRAP_XSTATUS_SIE_BIT 1
 #define TRAP_XSTATUS_MIE_BIT 3
 #define TRAP_XSTATUS_UPIE_BIT 4
@@ -39,28 +42,7 @@
 
 #define UART_TXD_REG 0x10000000
 
-void put_char(char c)
-{
-    char *txd = (char *) UART_TXD_REG;
-    *txd = c;
-}
+int riscv_helper_printf (const char *fmt, ...);
+void pass(void);
 
-int printf (const char *fmt, ...)
-{
-    char buffer[99], *sptr = buffer;
-    va_list va;
-    int rslt;
-    va_start(va, fmt);
-    rslt = vsnprintf(buffer, sizeof(buffer), fmt, va);
-    va_end(va);
-    while (*sptr) put_char(*sptr++);
-    return rslt;
-}
-
-#define MTVEC_CLIC_VECTORED 1
-
-void pass(void)
-{
-    PRIV_DEBUG("pass!\n");
-    while(1);
-}
+#endif /* RISCV_CSR_H */
